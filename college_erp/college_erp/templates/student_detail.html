@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            <div class="card shadow-lg border-0" style="border-radius: 30px; overflow: hidden;">
+                
+                <div class="card-header bg-primary text-white text-center py-5">
+                    <div class="mb-3">
+                        <i class="fas fa-user-graduate fa-5x shadow-sm p-3 bg-white text-primary rounded-circle"></i>
+                    </div>
+                    <h1 class="fw-bold m-0">{{ student.first_name }} {{ student.last_name }}</h1>
+                    <div class="mt-2">
+                        <span class="badge bg-light text-primary px-4 py-2 rounded-pill fs-6">Roll No: {{ student.roll_no|default:"Not Assigned" }}</span>
+                        <span class="badge bg-warning text-dark px-4 py-2 rounded-pill fs-6 ms-2">{{ student.course|default:"MCA" }}</span>
+                    </div>
+                </div>
+
+                <div class="card-body p-5 bg-white">
+                    <div class="row g-5">
+                        
+                        <div class="col-md-6 border-end">
+                            <h5 class="text-primary fw-bold text-uppercase mb-4 border-bottom pb-2">
+                                <i class="fas fa-info-circle me-2"></i>Personal & Academic
+                            </h5>
+                            
+                            <div class="mb-4">
+                                <label class="text-muted small d-block">Aadhar Number</label>
+                                <span class="h6 fw-bold text-dark">{{ student.aadhar_number|default:"Not Filled" }}</span>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="text-muted small d-block">Department</label>
+                                <span class="h6 fw-bold text-dark">{{ student.department.department_name|default:"General" }}</span>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="text-muted small d-block">10th Score</label>
+                                    <span class="h6 fw-bold text-success">{{ student.marks_10th|default:"0" }}%</span>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="text-muted small d-block">12th Score</label>
+                                    <span class="h6 fw-bold text-success">{{ student.marks_12th|default:"0" }}%</span>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label class="text-muted small d-block">Contact Email</label>
+                                <span class="h6 fw-bold text-dark">{{ student.email }}</span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <h5 class="text-primary fw-bold text-uppercase mb-4 border-bottom pb-2">
+                                <i class="fas fa-users me-2"></i>Family & Contact
+                            </h5>
+
+                            <div class="mb-4">
+                                <label class="text-muted small d-block">Father's Name</label>
+                                <span class="h6 fw-bold text-dark">{{ student.father_name|default:"Not Filled" }}</span>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="text-muted small d-block">Mother's Name</label>
+                                <span class="h6 fw-bold text-dark">{{ student.mother_name|default:"Not Filled" }}</span>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="text-muted small d-block">Mobile (Student)</label>
+                                <span class="h6 fw-bold text-dark">{{ student.mobile }}</span>
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="text-muted small d-block">Category</label>
+                                <span class="badge bg-info text-white px-3">{{ student.category|default:"General" }}</span>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-5 pt-4 border-top text-center">
+                        <a href="{% url 'admin_dashboard' %}" class="btn btn-outline-primary rounded-pill px-5 fw-bold">
+                            <i class="fas fa-arrow-left me-2"></i> Back to Hub
+                        </a>
+                        <button onclick="window.print()" class="btn btn-primary rounded-pill px-5 fw-bold ms-3">
+                            <i class="fas fa-print me-2"></i> Print Profile
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

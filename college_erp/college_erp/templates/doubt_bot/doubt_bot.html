@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container-fluid px-4">
+  <h2 style="color:#2563eb; font-size:1.1rem; font-weight:600; margin-bottom:6px;">
+    🤖 Doubt Resolution Bot
+  </h2>
+  <p class="text-muted small mb-3">24/7 AI assistant for your course-related doubts</p>
+
+  <!-- Subject Tags -->
+  <div style="display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;" id="subjectTags">
+    {# This causes the error: #}
+    {% for subject in subjects %}
+    <option value="{{ subject }}">{{ subject }}</option>
+{% endfor %}
+  </div>
+
+  <div class="card">
+    <div class="card-body p-3">
+      <div id="chatMessages" style="
+        height:420px; overflow-y:auto; background:#f8fafc;
+        border-radius:10px; padding:1rem;
+        display:flex; flex-direction:column; gap:12px;">
+        <div class="msg-bot">
+          👋 Namaste! Main aapka AI study assistant hoon. Koi bhi course-related sawaal poochho!
+        </div>
+      </div>
+      <div style="display:flex; gap:10px; margin-top:12px;">
+        <input type="text" id="doubtInput" class="form-control"
+          placeholder="Apna sawaal type karo..." />
+        <button class="btn btn-primary px-3" id="sendBtn">
+          ➤
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.subject-tag {
+  font-size:12px; padding:4px 14px;
+  border:1px solid #2563eb; color:#2563eb;
+  border-radius:20px; cursor:pointer; background:white;
+  transition:all 0.2s;
+}
+.subject-tag.active, .subject-tag:hover {
+  background:#2563eb; color:white;
+}
+.msg-user {
+  align-self:flex-end; background:#2563eb; color:white;
+  padding:10px 14px; border-radius:18px 18px 4px 18px;
+  max-width:75%; font-size:14px;
+}
+.msg-bot {
+  align-self:flex-start; background:white;
+  border:1px solid #e2e8f0;
+  padding:10px 14px; border-radius:4px 18px 18px 18px;
+  max-width:75%; font-size:14px; line-height:1.6;
+}
+.msg-loading span {
+  display:inline-block; width:8px; height:8px;
+  background:#94a3b8; border-radius:50%; margin:0 2px;
+  animation:bounce 1.2s infinite;
+}
+.msg-loading span:nth-child(2){animation-delay:.2s}
+.msg-loading span:nth-child(3){animation-delay:.4s}
+@keyframes bounce {
+  0%,60%,100%{transform:translateY(0)}
+  30%{transform:translateY(-6px)}
+}
+</style>
+
+<script>
+const CSRF = '{{ csrf_token }}';
+let selectedSubject = 'General';
+let chatHistory = [];
+
+document.querySelectorAll('.subject-tag').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.subject-tag').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+    selectedSubject = this.dataset.subject;
+  });
+});
+
+function addMsg(text, type) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = type === 'user' ? 'msg-user' : 'msg-bot';
+  div.innerText = text;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+function addLoading() {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'msg-bot msg-loading';
+  div.innerHTML = '<span></span><span></span><span></span>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  return div;
+}
+
+async function sendDoubt() {
+  const input = document.getElementById('doubtInput');
+  const q = input.value.trim();
+  if (!q) return;
+
+  addMsg(q, 'user');
+  chatHistory.push({ role: 'user', content: q });
+  input.value = '';
+
+  const loader = addLoading();
+
+  try {
+    const res = await fetch('{% url "doubt_bot:ask" %}', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRFToken': CSRF
+      },
+      body: JSON.stringify({
+        messages: chatHistory,
+        subject: selectedSubject
+      })
+    });
+    const data = await res.json();
+    loader.remove();
+    const answer = data.answer || data.error || 'Error aaya, dobara try karo.';
+    addMsg(answer, 'bot');
+    chatHistory.push({ role: 'assistant', content: answer });
+    if (chatHistory.length > 10) chatHistory = chatHistory.slice(-10);
+  } catch(e) {
+    loader.remove();
+    addMsg('Network error. Please try again.', 'bot');
+  }
+}
+
+document.getElementById('sendBtn').addEventListener('click', sendDoubt);
+document.getElementById('doubtInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') sendDoubt();
+});
+</script>
+
+{% endblock %}

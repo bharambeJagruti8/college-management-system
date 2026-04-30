@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Library Management</h2>
+    <form method="POST" class="card p-3 mb-4">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col"><input type="text" name="title" class="form-control" placeholder="Book Title" required></div>
+            <div class="col"><input type="text" name="author" class="form-control" placeholder="Author" required></div>
+            <div class="col"><input type="number" name="qty" class="form-control" placeholder="Qty" required></div>
+            <div class="col"><button type="submit" class="btn btn-primary">Add Book</button></div>
+        </div>
+    </form>
+    <table class="table table-striped">
+        <thead><tr><th>Title</th><th>Author</th><th>Quantity</th></tr></thead>
+        <tbody>
+            {% for b in books %}
+            <tr><td>{{ b.title }}</td><td>{{ b.author }}</td><td>{{ b.quantity }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

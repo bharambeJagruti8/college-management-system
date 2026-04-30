@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        .receipt-box { max-width: 800px; margin: auto; padding: 30px; border: 1px solid #eee; font-family: 'Helvetica', sans-serif; }
+        .header { text-align: center; border-bottom: 2px solid #0d6efd; padding-bottom: 10px; }
+        .details { margin-top: 20px; display: flex; justify-content: space-between; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        .total { font-size: 20px; font-weight: bold; text-align: right; margin-top: 20px; }
+        .print-btn { background: #0d6efd; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; }
+        @media print { .print-btn { display: none; } }
+    </style>
+</head>
+<body>
+    <div class="receipt-box">
+        <div class="header">
+            <h1>EDUCORE COLLEGE ERP</h1>
+            <p>Engineering Department | Official Fee Receipt</p>
+        </div>
+        
+        <div class="details">
+            <div>
+                <strong>Student Name:</strong> {{ student.first_name }} {{ student.last_name }}<br>
+                <strong>Roll No:</strong> {{ student.roll_no }}<br>
+                <strong>Department:</strong> Engineering
+            </div>
+            <div style="text-align: right;">
+                <strong>Receipt No:</strong> #REC-00{{ fee.id }}<br>
+                <strong>Date:</strong> {{ today }}
+            </div>
+        </div>
+
+        <table>
+            <thead style="background: #f8f9fa;">
+                <tr>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>College Tuition & Academic Fees</td>
+                    <td>{% if fee.status %}Paid{% else %}Pending{% endif %}</td>
+                    <td>₹{{ fee.amount }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="total">
+            Total Amount: ₹{{ fee.amount }}
+        </div>
+
+        <div style="margin-top: 50px; text-align: center;">
+            <button class="print-btn" onclick="window.print()">Print / Download PDF</button>
+            <p style="font-size: 10px; color: #888;">This is a computer-generated receipt.</p>
+        </div>
+    </div>
+</body>
+</html>

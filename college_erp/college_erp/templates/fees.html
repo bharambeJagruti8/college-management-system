@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>EduCore | Fee Management</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Poppins", sans-serif; }
+        body { display: flex; background: #f4f7fb; }
+        .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 30px; }
+        .header { background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .stats-container { display: flex; gap: 20px; margin-top: 20px; }
+        .stat-box { flex: 1; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); text-align: center; }
+        .stat-box h3 { color: #4e73df; font-size: 24px; }
+        .stat-box p { color: #888; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+    {% include 'sidebar.html' %}
+
+    <div class="main-content">
+        <div class="header">
+            <h2>Fee Management</h2>
+        </div>
+
+        <div class="stats-container">
+            <div class="stat-box">
+                <h3>₹ 0</h3>
+                <p>Total Fees Collected</p>
+            </div>
+            <div class="stat-box">
+                <h3>₹ 0</h3>
+                <p>Pending Fees</p>
+            </div>
+        </div>
+
+        <div style="background: #fff; margin-top: 20px; padding: 20px; border-radius: 8px; text-align: center; color: #999;">
+            Fee records will be displayed here soon.
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Educore ERP | Admin Hub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --primary: #6366f1; --primary-soft: #eef2ff; --sidebar-width: 240px; --bg: #f5f6fa; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: var(--bg); font-family: 'Inter', sans-serif; display: flex; min-height: 100vh; }
+        .sidebar { width: var(--sidebar-width); background: #fff; height: 100vh; position: fixed; border-right: 1px solid #e8eaf0; display: flex; flex-direction: column; z-index: 100; }
+        .brand { padding: 20px 18px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #f0f1f5; }
+        .brand-icon { width: 34px; height: 34px; background: var(--primary); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-size: 1rem; }
+        .brand-name { font-size: 1rem; font-weight: 700; color: #1e1e2e; }
+        .nav-section { padding: 18px 18px 4px; font-size: 0.65rem; font-weight: 600; color: #b0b3c1; text-transform: uppercase; letter-spacing: 1px; }
+        .nav-link { display: flex; align-items: center; gap: 10px; padding: 9px 14px; margin: 2px 10px; border-radius: 9px; color: #6b7280; font-size: 0.85rem; font-weight: 500; text-decoration: none; transition: 0.15s; }
+        .nav-link i { width: 18px; text-align: center; font-size: 0.9rem; }
+        .nav-link:hover { background: #f4f5fb; color: var(--primary); }
+        .nav-link.active { background: var(--primary-soft); color: var(--primary); }
+        .nav-link.danger { color: #ef4444; }
+        .nav-link.danger:hover { background: #fff5f5; }
+        .nav-link.scanner-btn { background: var(--primary); color: white; margin: 10px; justify-content: center; border-radius: 9px; }
+        .nav-link.scanner-btn:hover { background: #4f46e5; color: white; }
+        .main-content { margin-left: var(--sidebar-width); flex: 1; padding: 30px 32px; }
+        .topbar { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 26px; }
+        .page-title { font-size: 1.25rem; font-weight: 700; color: #1e1e2e; }
+        .page-sub { font-size: 0.78rem; color: #9ca3af; margin-top: 2px; }
+        .btn-new { background: var(--primary); color: white; border: none; padding: 9px 22px; border-radius: 25px; font-size: 0.82rem; font-weight: 600; cursor: pointer; text-decoration: none; }
+        .stats-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; margin-bottom: 24px; }
+        .stat-card { background: white; border-radius: 14px; padding: 16px 14px; border: 1px solid #f0f1f5; }
+        .stat-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; margin-bottom: 10px; }
+        .stat-label { font-size: 0.65rem; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; }
+        .stat-value { font-size: 1.3rem; font-weight: 700; color: #1e1e2e; margin-top: 2px; }
+        .charts-row { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 20px; }
+        .panel { background: white; border-radius: 16px; padding: 20px; border: 1px solid #f0f1f5; }
+        .panel-title { font-size: 0.88rem; font-weight: 600; color: #1e1e2e; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .panel-title i { color: var(--primary); }
+        .bottom-row { display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+        .table-search { border: 1px solid #e8eaf0; border-radius: 25px; padding: 7px 16px; font-size: 0.8rem; outline: none; background: #f9fafb; width: 200px; }
+        .table thead th { background: #fafafa; font-size: 0.68rem; font-weight: 600; color: #9ca3af; text-transform: uppercase; letter-spacing: 0.5px; padding: 10px 12px; border: none; }
+        .table tbody td { padding: 11px 12px; font-size: 0.83rem; vertical-align: middle; border-color: #f5f6fa; }
+        .student-link { color: var(--primary); font-weight: 600; text-decoration: none; }
+        .roll-badge { font-family: monospace; font-size: 0.78rem; background: #f4f5fb; color: var(--primary); padding: 2px 8px; border-radius: 5px; font-weight: 600; }
+        .badge-auth { background: #ecfdf5; color: #059669; font-size: 0.72rem; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+        .notice-item { border-left: 3px solid var(--primary); background: #f9fafb; padding: 10px 12px; border-radius: 0 9px 9px 0; margin-bottom: 8px; }
+        .notice-title { font-size: 0.82rem; font-weight: 600; color: #1e1e2e; }
+        .notice-body { font-size: 0.75rem; color: #6b7280; margin-top: 2px; }
+        .notice-date { font-size: 0.68rem; color: var(--primary); margin-top: 4px; }
+        .btn-post { display: block; width: 100%; text-align: center; border: 1px solid #e8eaf0; background: white; color: var(--primary); border-radius: 25px; padding: 8px; font-size: 0.8rem; font-weight: 600; margin-top: 12px; text-decoration: none; }
+        .scan-card { background: var(--primary-soft); border-radius: 12px; padding: 14px; text-align: center; margin-bottom: 16px; }
+        .scan-card h6 { font-size: 0.85rem; font-weight: 700; color: var(--primary); }
+        .scan-card p { font-size: 0.75rem; color: #6366f1; margin: 4px 0 10px; opacity: 0.8; }
+        .btn-scan { background: var(--primary); color: white; border: none; padding: 7px 18px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; cursor: pointer; text-decoration: none; }
+        .chat-fab { position: fixed; bottom: 28px; right: 28px; width: 50px; height: 50px; background: var(--primary); border: none; border-radius: 50%; color: white; font-size: 1.2rem; cursor: pointer; z-index: 9999; box-shadow: 0 4px 20px rgba(99,102,241,0.4); }
+        #chatWindow { display: none; position: fixed; bottom: 88px; right: 28px; width: 340px; height: 460px; background: white; border-radius: 18px; box-shadow: 0 8px 40px rgba(0,0,0,0.12); z-index: 9999; flex-direction: column; overflow: hidden; border: 1px solid #e8eaf0; }
+        .chat-header { background: var(--primary); padding: 14px 18px; color: white; display: flex; justify-content: space-between; align-items: center; font-size: 0.88rem; font-weight: 600; }
+        #chatMessages { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; }
+        .chat-footer { padding: 10px 12px; border-top: 1px solid #f0f1f5; display: flex; gap: 8px; }
+        #chatInput { flex: 1; border: 1px solid #e8eaf0; border-radius: 20px; padding: 8px 14px; font-size: 0.82rem; outline: none; background: #f9fafb; }
+        .btn-send { width: 36px; height: 36px; background: var(--primary); color: white; border: none; border-radius: 50%; cursor: pointer; font-size: 0.85rem; }
+    </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="brand">
+        <div class="brand-icon"><i class="fas fa-graduation-cap"></i></div>
+        <span class="brand-name">EDUCORE</span>
+    </div>
+    <div>
+        <div class="nav-section">Management</div>
+        <a href="/dashboard-module/dashboard/" class="nav-link active"><i class="fas fa-th-large"></i> Dashboard</a>
+        <a href="/dashboard-module/manage-students/" class="nav-link"><i class="fas fa-user-graduate"></i> Students</a>
+        <a href="/dashboard-module/staff-manage/" class="nav-link"><i class="fas fa-user-tie"></i> Staff</a>
+        <a href="/dashboard-module/departments/" class="nav-link"><i class="fas fa-sitemap"></i> Departments</a>
+        <div class="nav-section">Academic Ops</div>
+        <a href="{% url 'attendance_hub' %}" class="nav-link"><i class="fas fa-calendar-check"></i> Attendance</a>
+        <a href="/dashboard-module/timetable/" class="nav-link"><i class="fas fa-clock"></i> Timetable</a>
+        <a href="/dashboard-module/exams/" class="nav-link"><i class="fas fa-file-signature"></i> Exams & Results</a>
+        <a href="{% url 'start_scan' %}" class="nav-link scanner-btn"><i class="fas fa-camera"></i> Launch AI Scanner</a>
+        <div class="nav-section">Finance & Social</div>
+        <a href="/dashboard-module/collect-fee/" class="nav-link"><i class="fas fa-wallet"></i> Fee Management</a>
+        <a href="/dashboard-module/messaging/" class="nav-link"><i class="fas fa-comment-dots"></i> Messaging</a>
+        <a href="{% url 'logout' %}" class="nav-link danger mt-3"><i class="fas fa-power-off"></i> Logout</a>
+    </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main-content">
+
+    <!-- TOPBAR -->
+    <div class="topbar">
+        <div>
+            <div class="page-title">Admin Hub</div>
+            <div class="page-sub">System Session: 2026–27</div>
+        </div>
+        <a href="/admissions/register/" class="btn-new">+ New Admission</a>
+    </div>
+
+    <!-- STATS -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="stat-icon" style="background:#eef2ff; color:#6366f1;"><i class="fas fa-users"></i></div>
+            <div class="stat-label">Students</div>
+            <div class="stat-value">{{ total_students }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background:#ecfdf5; color:#10b981;"><i class="fas fa-indian-rupee-sign"></i></div>
+            <div class="stat-label">Collected</div>
+            <div class="stat-value">₹{{ total_revenue }}</div>
+        </div>
+        <div class="stat-card" style="border-bottom: 2px solid #f59e0b;">
+            <div class="stat-icon" style="background:#fffbeb; color:#f59e0b;"><i class="fas fa-clock"></i></div>
+            <div class="stat-label">Pending</div>
+            <div class="stat-value">₹{{ pending_fees }}</div>
+        </div>
+        <div class="stat-card" style="border-bottom: 2px solid #14b8a6;">
+            <div class="stat-icon" style="background:#f0fdfa; color:#14b8a6;"><i class="fas fa-calendar-check"></i></div>
+            <div class="stat-label">Attendance</div>
+            <div class="stat-value">94%</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background:#eef2ff; color:#6366f1;"><i class="fas fa-user-tie"></i></div>
+            <div class="stat-label">Staff</div>
+            <div class="stat-value">{{ total_staff }}</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon" style="background:#f8fafc; color:#64748b;"><i class="fas fa-sitemap"></i></div>
+            <div class="stat-label">Depts</div>
+            <div class="stat-value">2</div>
+        </div>
+    </div>
+
+    <!-- CHARTS -->
+    <div class="charts-row">
+        <div class="panel">
+            <div class="panel-title"><i class="fas fa-chart-bar"></i> Fee Collection Trend</div>
+            <canvas id="feeChart" height="100"></canvas>
+        </div>
+        <div class="panel">
+            <div class="panel-title"><i class="fas fa-chart-pie"></i> Collected vs Pending</div>
+            <canvas id="feeDonut" height="200"></canvas>
+        </div>
+    </div>
+
+    <!-- BOTTOM ROW -->
+    <div class="bottom-row">
+        <div class="panel">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <div class="panel-title mb-0"><i class="fas fa-history"></i> Recent Enrollments</div>
+                <input type="text" id="studentSearch" class="table-search" placeholder="Search student...">
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Student Name</th>
+                        <th>Roll No</th>
+                        <th>Department</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="studentTable">
+                    {% for student in recent_admissions %}
+                    <tr>
+                        <td><a href="{% url 'student_profile' student.id %}" class="student-link">{{ student.first_name }} {{ student.last_name }}</a></td>
+                        <td><span class="roll-badge">{{ student.roll_no }}</span></td>
+                        <td style="color:#6b7280;">{{ student.department.department_name|default:"MCA" }}</td>
+                        <td><span class="badge-auth">Authorized</span></td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4" class="text-center text-muted py-3" style="font-size:0.82rem;">No students found.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div>
+            <div class="scan-card">
+                <h6><i class="fas fa-camera me-1"></i> AI Attendance</h6>
+                <p>Scan students via facial recognition</p>
+                <a href="{% url 'start_scan' %}" class="btn-scan">Launch Scanner</a>
+            </div>
+            <div class="panel">
+                <div class="panel-title"><i class="fas fa-bullhorn" style="color:#ef4444;"></i> Notice Board</div>
+                {% for notice in notices %}
+                <div class="notice-item">
+                    <div class="notice-title">{{ notice.title }}</div>
+                    <div class="notice-body">{{ notice.content }}</div>
+                    <div class="notice-date">{{ notice.date_posted|date:"d M, Y" }}</div>
+                </div>
+                {% empty %}
+                <p style="font-size:0.8rem; color:#9ca3af; text-align:center; padding:16px 0;">No active notices.</p>
+                {% endfor %}
+                <a href="/admin/dashboard/notice/add/" class="btn-post">+ Post New</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- BONAFIDE REQUESTS - Full Width -->
+    <div class="panel mt-4" style="overflow-x: auto;">
+        <div class="panel-title"><i class="fas fa-file-alt"></i> Bonafide Requests</div>
+        <table class="table" style="min-width: 700px;">
+            <thead>
+                <tr>
+                    <th>Request ID</th>
+                    <th>Student</th>
+                    <th>Purpose</th>
+                    <th>Addressed To</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for req in bonafide_requests %}
+                <tr>
+                    <td>BON-{{ req.id|stringformat:"03d" }}</td>
+                    <td>{{ req.student.get_full_name|default:req.student.username }}</td>
+                    <td>{{ req.get_purpose_display }}</td>
+                    <td>{{ req.addressed_to }}</td>
+                    <td>{{ req.created_at|date:"d M, Y" }}</td>
+                    <td>
+                        {% if req.status == 'pending' %}
+                            <span style="background:#fff3cd; color:#856404; padding:3px 10px; border-radius:20px; font-size:0.75rem; font-weight:600;">Pending</span>
+                        {% elif req.status == 'approved' %}
+                            <span style="background:#d1fae5; color:#065f46; padding:3px 10px; border-radius:20px; font-size:0.75rem; font-weight:600;">Approved</span>
+                        {% else %}
+                            <span style="background:#fee2e2; color:#991b1b; padding:3px 10px; border-radius:20px; font-size:0.75rem; font-weight:600;">Rejected</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if req.status == 'pending' %}
+                        <a href="{% url 'bonafide:update_status' req.id %}?action=approve" style="background:#10b981; color:white; padding:4px 12px; border-radius:6px; font-size:0.78rem; text-decoration:none; margin-right:4px;">✔ Approve</a>
+                        <a href="{% url 'bonafide:update_status' req.id %}?action=reject" style="background:#ef4444; color:white; padding:4px 12px; border-radius:6px; font-size:0.78rem; text-decoration:none;">✘ Reject</a>
+                        {% else %}
+                        <span style="color:#9ca3af; font-size:0.78rem;">Done</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="7" class="text-center text-muted py-3" style="font-size:0.82rem;">Koi request nahi hai.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</main>
+
+<!-- CHATBOT FAB -->
+<button class="chat-fab" onclick="toggleChat()"><i class="fas fa-robot"></i></button>
+<div id="chatWindow">
+    <div class="chat-header">
+        <span><i class="fas fa-robot me-2"></i>EduCore AI</span>
+        <span onclick="toggleChat()" style="cursor:pointer; font-size:1.2rem;">&times;</span>
+    </div>
+    <div id="chatMessages">
+        <div style="background:#eef2ff; padding:10px 14px; border-radius:12px; font-size:0.82rem; max-width:85%; color:#4338ca;">
+            👋 Namaste! Students, fees, attendance ke baare mein kuch bhi puchho!
+        </div>
+    </div>
+    <div class="chat-footer">
+        <input type="text" id="chatInput" placeholder="Kuch bhi puchho..." onkeypress="if(event.key==='Enter') sendMessage()">
+        <button class="btn-send" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    document.getElementById('studentSearch').addEventListener('keyup', function () {
+        let term = this.value.toLowerCase();
+        document.querySelectorAll('#studentTable tr').forEach(row => {
+            row.style.display = row.innerText.toLowerCase().includes(term) ? '' : 'none';
+        });
+    });
+    new Chart(document.getElementById('feeChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+            datasets: [{ label: 'Fee Collected (₹)', data: {{ monthly_fee_data|safe }}, backgroundColor: 'rgba(99,102,241,0.12)', borderColor: '#6366f1', borderWidth: 2, borderRadius: 8 }]
+        },
+        options: { responsive: true, plugins: { legend: { display: false } }, scales: { y: { grid: { color: '#f5f6fa' }, ticks: { color: '#9ca3af', font: { size: 11 } } }, x: { grid: { display: false }, ticks: { color: '#9ca3af', font: { size: 11 } } } } }
+    });
+    new Chart(document.getElementById('feeDonut'), {
+        type: 'doughnut',
+        data: { labels: ['Collected', 'Pending'], datasets: [{ data: [{{ total_revenue|default:0 }}, {{ pending_fees|default:0 }}], backgroundColor: ['#6366f1', '#f59e0b'], borderWidth: 0, hoverOffset: 6 }] },
+        options: { responsive: true, cutout: '72%', plugins: { legend: { position: 'bottom', labels: { color: '#6b7280', font: { size: 12, weight: '600' } } } } }
+    });
+    let chatOpen = false;
+    function toggleChat() { chatOpen = !chatOpen; document.getElementById('chatWindow').style.display = chatOpen ? 'flex' : 'none'; }
+    function appendMessage(text, isUser) {
+        const box = document.getElementById('chatMessages');
+        const div = document.createElement('div');
+        div.style.cssText = `padding:10px 14px;border-radius:12px;font-size:0.82rem;max-width:85%;${isUser ? 'background:#6366f1;color:white;align-self:flex-end;margin-left:auto;' : 'background:#eef2ff;color:#4338ca;align-self:flex-start;'}`;
+        div.innerText = text;
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+    }
+    async function sendMessage() {
+        const input = document.getElementById('chatInput');
+        const msg = input.value.trim();
+        if (!msg) return;
+        appendMessage(msg, true);
+        input.value = '';
+        appendMessage('Soch raha hoon...', false);
+        try {
+            const res = await fetch('/ai-chat/', { method: 'POST', headers: { 'Content-Type': 'application/json', 'X-CSRFToken': getCookie('csrftoken') }, body: JSON.stringify({ message: msg }) });
+            const data = await res.json();
+            document.getElementById('chatMessages').lastChild.innerText = data.reply;
+        } catch (e) { document.getElementById('chatMessages').lastChild.innerText = 'Error aa gaya, dobara try karo.'; }
+    }
+    function getCookie(name) {
+        let val = null;
+        if (document.cookie) { document.cookie.split(';').forEach(c => { c = c.trim(); if (c.startsWith(name + '=')) val = decodeURIComponent(c.slice(name.length + 1)); }); }
+        return val;
+    }
+</script>
+</body>
+</html>

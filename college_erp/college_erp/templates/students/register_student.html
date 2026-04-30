@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    /* Premium UI Styling */
+    .admission-card {
+        background: #ffffff;
+        border-radius: 25px;
+        border: none;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    .form-header {
+        background: linear-gradient(45deg, #1a237e, #4e73df);
+        padding: 3rem 2rem;
+        text-align: center;
+        color: white;
+    }
+    .section-title {
+        color: #1a237e;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 1.2px;
+        margin-top: 2.5rem;
+        display: flex;
+        align-items: center;
+    }
+    .section-title::after {
+        content: "";
+        flex: 1;
+        height: 2px;
+        background: #f0f0f0;
+        margin-left: 20px;
+    }
+    .form-control, .form-select {
+        border-radius: 12px;
+        border: 1.5px solid #eaecf4;
+        padding: 0.8rem;
+        transition: all 0.2s ease-in-out;
+    }
+    .form-control:focus {
+        border-color: #4e73df;
+        box-shadow: 0 0 0 4px rgba(78, 115, 223, 0.1);
+    }
+    .ai-box {
+        background: #f8f9fc;
+        border: 1px dashed #4e73df;
+        border-radius: 15px;
+        padding: 15px;
+    }
+</style>
+
+<div class="container mt-5 mb-5">
+    <div class="admission-card">
+        <div class="form-header">
+            <h1 class="display-6 fw-bold">Educore Smart Admission</h1>
+            <p class="lead opacity-75">Academic Session 2026-27</p>
+        </div>
+
+        <div class="card-body p-lg-5">
+            {% if error %}
+            <div class="alert alert-danger border-0 shadow-sm rounded-4 mb-4">
+                <i class="fas fa-exclamation-triangle me-2"></i> {{ error }}
+            </div>
+            {% endif %}
+
+            <div class="ai-box mb-5 d-flex align-items-center">
+                <div class="spinner-grow spinner-grow-sm text-primary me-3" role="status"></div>
+                <div>
+                    <small class="text-muted d-block text-uppercase fw-bold" style="font-size: 0.7rem;">AI Verification System</small>
+                    <span id="ai-status" class="fw-bold text-primary">System Online: Waiting for input...</span>
+                </div>
+            </div>
+
+            <form method="POST" id="admissionForm">
+                {% csrf_token %}
+
+                <div class="section-title mb-4">1. Student Profile</div>
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small text-muted">First Name</label>
+                        <input type="text" name="first_name" class="form-control" placeholder="Enter first name" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small text-muted">Last Name</label>
+                        <input type="text" name="last_name" class="form-control" placeholder="Enter last name" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small text-muted">Gender</label>
+                        <select name="gender" class="form-select">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small text-muted">Category</label>
+                        <select name="category" class="form-select" required>
+                            <option value="General">General</option>
+                            <option value="OBC">OBC</option>
+                            <option value="SC">SC</option>
+                            <option value="ST">ST</option>
+                            <option value="EWS">EWS</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="row g-4 mt-1">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold small text-muted">Aadhar Number</label>
+                        <input type="text" name="aadhar_number" id="aadharInput" class="form-control" maxlength="12" placeholder="12 Digits Only" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold small text-muted">Student Mobile</label>
+                        <input type="text" name="mobile_number" class="form-control" placeholder="+91..." required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold small text-muted">Date of Birth</label>
+                        <input type="date" name="date_of_birth" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="section-title mb-4 mt-5">2. Residential Data</div>
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold small text-muted">Residential Address</label>
+                        <textarea name="residential_address" id="resAddress" class="form-control" rows="3" required></textarea>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-between">
+                            <label class="form-label fw-bold small text-muted">Current Address</label>
+                            <div class="form-check form-switch mb-2">
+                                <input class="form-check-input" type="checkbox" id="copyAddress">
+                                <small class="text-primary fw-bold" style="font-size: 0.7rem; cursor: pointer;">SAME AS ABOVE</small>
+                            </div>
+                        </div>
+                        <textarea name="current_address" id="curAddress" class="form-control" rows="3" required></textarea>
+                    </div>
+                </div>
+
+                <div class="section-title mb-4 mt-5">3. Family & Academic Record</div>
+                <div class="row g-4 mb-4">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold small text-muted">Father's Full Name</label>
+                        <input type="text" name="father_name" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold small text-muted">Mother's Full Name</label>
+                        <input type="text" name="mother_name" class="form-control" required>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold small text-muted">Parent Mobile</label>
+                        <input type="text" name="parent_mobile" class="form-control" required>
+                    </div>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small text-muted">Assign Department</label>
+                        <select name="department" class="form-select">
+                            {% for dept in departments %}
+                            <option value="{{ dept.id }}">{{ dept.department_name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small text-muted">10th Score (%)</label>
+                        <input type="number" step="0.01" name="tenth_marks" class="form-control academic" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small text-muted">12th Score (%)</label>
+                        <input type="number" step="0.01" name="twelfth_marks" class="form-control academic" required>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold small text-muted">Graduation Score (%)</label>
+                        <input type="number" step="0.01" name="graduation_marks" id="gradMarks" class="form-control academic" required>
+                    </div>
+                </div>
+
+                <div class="text-center mt-5">
+                    <button type="submit" class="btn btn-primary btn-lg px-5 py-3 rounded-pill shadow-lg border-0" style="background: linear-gradient(45deg, #1a237e, #4e73df);">
+                        <i class="fas fa-check-circle me-2"></i> FINAL SUBMISSION
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // AI Feature: Address Sync
+    document.getElementById('copyAddress').addEventListener('change', function() {
+        if(this.checked) {
+            document.getElementById('curAddress').value = document.getElementById('resAddress').value;
+            document.getElementById('ai-status').innerHTML = '<i class="fas fa-check"></i> Address synchronized successfully!';
+        }
+    });
+
+    // AI Feature: Real-time Eligibility Check
+    document.getElementById('gradMarks').addEventListener('input', function() {
+        let status = document.getElementById('ai-status');
+        let val = parseFloat(this.value);
+        if (val >= 50) {
+            status.innerHTML = '<i class="fas fa-smile text-success"></i> Eligibility: <strong class="text-success">QUALIFIED</strong> (Above 50%)';
+        } else if (val > 0) {
+            status.innerHTML = '<i class="fas fa-exclamation-circle text-danger"></i> Eligibility: <strong class="text-danger">NOT ELIGIBLE</strong> (Below 50%)';
+        }
+    });
+
+    // AI Feature: Aadhar Digit Check
+    document.getElementById('aadharInput').addEventListener('input', function() {
+        if(this.value.length === 12) {
+            document.getElementById('ai-status').innerHTML = '<i class="fas fa-id-card"></i> Aadhar format seems valid.';
+        } else {
+            document.getElementById('ai-status').innerHTML = 'Aadhar check: Enter 12 digits...';
+        }
+    });
+</script>
+{% endblock %}

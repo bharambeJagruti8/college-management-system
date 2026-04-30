@@ -1,0 +1,135 @@
+{% include 'sidebar.html' %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+    .main-content { margin-left: 280px; padding: 40px; }
+    .glass-panel { background: white; border-radius: 20px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+</style>
+
+<!-- POPUP ALERT -->
+{% if defaulters %}
+<div id="defaulterAlert" style="
+    position: fixed; top: 20px; right: 20px; z-index: 99999;
+    background: #fff; border-left: 5px solid #e74c3c;
+    border-radius: 12px; padding: 20px; width: 320px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h6 style="color:#e74c3c; margin:0;">⚠️ Defaulter Alert!</h6>
+        <span onclick="document.getElementById('defaulterAlert').style.display='none'" 
+              style="cursor:pointer; font-size:18px; color:#999;">✕</span>
+    </div>
+    <p style="font-size:0.85rem; color:#666; margin:8px 0;">
+        <strong>{{ defaulters|length }} student(s)</strong> ki attendance 75% se kam hai:
+    </p>
+    <ul style="font-size:0.85rem; color:#e74c3c; padding-left:18px; margin:0;">
+        {% for d in defaulters %}
+        <li>{{ d.first_name }} {{ d.last_name }} — {{ d.percentage }}%</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'attendance_hub' %}" style="display:block; margin-top:12px; text-align:center; 
+              background:#e74c3c; color:white; padding:8px; 
+              border-radius:8px; text-decoration:none; font-size:0.85rem;">
+        View Defaulter List
+    </a>
+</div>
+{% endif %}
+
+<main class="main-content">
+    <h2 class="fw-bold mb-5 text-dark">Attendance Center</h2>
+
+    <!-- Student Attendance -->
+    <div class="glass-panel mb-5">
+        <h5 class="fw-bold text-primary mb-4"><i class="fas fa-user-graduate me-2"></i>Student Attendance Status</h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Roll No</th>
+                        <th>Student Name</th>
+                        <th class="text-center">Attendance %</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for student in all_students %}
+                    <tr>
+                        <td class="ps-4 fw-bold text-primary">{{ student.roll_no }}</td>
+                        <td>{{ student.first_name }} {{ student.last_name }}</td>
+                        <td class="text-center">
+                            {% if student.percentage < 75 %}
+                            <span class="badge" style="background-color:#dc3545 !important; color:white; padding:8px 15px; border-radius:8px;">
+                                <i class="fas fa-exclamation-triangle me-1"></i> {{ student.percentage }}%
+                            </span>
+                            {% else %}
+                            <span class="badge" style="background-color:#198754 !important; color:white; padding:8px 15px; border-radius:8px;">
+                                <i class="fas fa-check-circle me-1"></i> {{ student.percentage }}%
+                            </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3" class="text-center text-muted">No Students Found</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- DEFAULTER LIST SECTION -->
+    {% if defaulters %}
+    <div id="defaulter-section" class="glass-panel mb-5" style="background:#fff5f5; border:1px solid #fecaca;">
+        <h5 class="fw-bold mb-4" style="color:#e74c3c;"><i class="fas fa-exclamation-circle me-2"></i>Defaulter Students (Below 75%)</h5>
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead style="background:#fecaca;">
+                    <tr>
+                        <th class="ps-4">Roll No</th>
+                        <th>Student Name</th>
+                        <th class="text-center">Attendance %</th>
+                        <th class="text-center">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for d in defaulters %}
+                    <tr style="border-bottom:1px solid #fecaca;">
+                        <td class="ps-4 fw-bold" style="color:#e74c3c;">{{ d.roll_no }}</td>
+                        <td>{{ d.first_name }} {{ d.last_name }}</td>
+                        <td class="text-center fw-bold" style="color:#e74c3c;">{{ d.percentage }}%</td>
+                        <td class="text-center">
+                            <span style="background:#e74c3c; color:white; padding:4px 12px; border-radius:20px; font-size:0.75rem;">
+                                ⚠️ Defaulter
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Staff Live Log -->
+    <div class="glass-panel">
+        <h5 class="fw-bold text-danger mb-4"><i class="fas fa-user-tie me-2"></i>Staff Live Log</h5>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Staff Name</th>
+                        <th>Designation</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for staff in all_staff %}
+                    <tr>
+                        <td class="ps-4 fw-bold">{{ staff.name }}</td>
+                        <td><span class="text-muted">{{ staff.designation }}</span></td>
+                        <td><span class="text-success fw-bold"><i class="fas fa-circle me-2" style="font-size:8px;"></i>Present</span></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</main>

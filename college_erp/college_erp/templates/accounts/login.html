@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EduCore Nexus | Secure Access Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            overflow: hidden;
+            position: relative;
+        }
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.15));
+            animation: animateCircle 20s linear infinite;
+        }
+        .circle-1 { width: 400px; height: 400px; top: -100px; left: -100px; animation-delay: 0s; }
+        .circle-2 { width: 300px; height: 300px; bottom: -50px; right: 10%; animation-delay: -5s; }
+        .circle-3 { width: 150px; height: 150px; top: 20%; right: 20%; animation-delay: -10s; }
+
+        @keyframes animateCircle {
+            0% { transform: translate(0, 0) rotate(0deg); opacity: 0.5; }
+            50% { transform: translate(50px, 50px) rotate(180deg); opacity: 0.8; }
+            100% { transform: translate(0, 0) rotate(360deg); opacity: 0.5; }
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 32px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        .input-field {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .input-field:focus {
+            border-color: #6366f1;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.3);
+            outline: none;
+        }
+        .role-btn {
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+        .role-btn.active {
+            background: rgba(99, 102, 241, 0.1);
+            border-color: #6366f1;
+            color: #818cf8;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="circle circle-1"></div>
+    <div class="circle circle-2"></div>
+    <div class="circle circle-3"></div>
+
+    <div class="glass-card w-full max-w-[1100px] grid md:grid-cols-2 overflow-hidden relative z-10">
+        
+        <div class="p-12 lg:p-16 flex flex-col justify-between bg-white/5 border-r border-white/5">
+            <div>
+                <h1 class="text-3xl font-800 tracking-tighter text-white italic uppercase mb-2">EDUCORE <span class="text-indigo-500 text-4xl">AI</span></h1>
+                <p class="text-slate-400 text-sm font-medium tracking-wide">Next-Gen College ERP & Analytics Platform</p>
+            </div>
+            <div class="my-16">
+                <h2 class="text-5xl font-800 text-white tracking-tight leading-tight mb-4">
+                    <span id="dynamic-greeting"></span><br>
+                    <span class="text-indigo-400">EduCore Nexus</span>
+                </h2>
+                <p class="text-slate-400 text-base max-w-md">Access your personalized academic universe. Select your role and enter credentials to proceed.</p>
+            </div>
+            <div class="flex items-center gap-4 text-slate-500 text-sm border-t border-white/5 pt-8">
+                <i class="fas fa-shield-alt text-indigo-400 text-lg"></i>
+                <p>Secured by AES-256 Encryption & AI Threat Detection System.</p>
+            </div>
+        </div>
+
+        <div class="p-12 lg:p-16 flex flex-col justify-center">
+            
+            <form method="POST" action="{% url 'login' %}" class="space-y-8">
+
+                {% csrf_token %}
+                
+                <div class="text-center mb-10">
+                    <h3 class="text-2xl font-bold text-white tracking-tight">Account Login</h3>
+                    <p class="text-slate-400 text-sm mt-1">Provide enrollment details to authenticate.</p>
+                </div>
+
+                <div class="space-y-3">
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest px-1">Select Authentication Role</label>
+                    <div class="grid grid-cols-3 gap-3">
+                        <button type="button" class="role-btn p-4 rounded-xl text-center bg-white/3 text-slate-300 hover:bg-white/5 active" data-role="student">
+                            <i class="fas fa-graduation-cap text-2xl mb-2"></i>
+                            <p class="text-xs font-semibold">Student</p>
+                        </button>
+                        <button type="button" class="role-btn p-4 rounded-xl text-center bg-white/3 text-slate-300 hover:bg-white/5" data-role="staff">
+                            <i class="fas fa-chalkboard-teacher text-2xl mb-2"></i>
+                            <p class="text-xs font-semibold">Staff</p>
+                        </button>
+                        <button type="button" class="role-btn p-4 rounded-xl text-center bg-white/3 text-slate-300 hover:bg-white/5" data-role="admin">
+                            <i class="fas fa-user-shield text-2xl mb-2"></i>
+                            <p class="text-xs font-semibold">Admin</p>
+                        </button>
+                    </div>
+                    <input type="hidden" name="role" id="selected-role" value="student">
+                </div>
+
+                <div class="space-y-5">
+                    <div class="relative">
+                        <i class="fas fa-user absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-lg"></i>
+                        <input type="text" name="username" placeholder="Enrollment ID / Username" required
+                               class="input-field w-full p-4 pl-12 rounded-xl text-sm font-medium placeholder:text-slate-600">
+                    </div>
+                    <div class="relative">
+                        <i class="fas fa-lock absolute left-4 top-1/2 -translate-y-1/2 text-slate-600 text-lg"></i>
+                        <input type="password" name="password" placeholder="Secure Password" required
+                               class="input-field w-full p-4 pl-12 rounded-xl text-sm font-medium placeholder:text-slate-600">
+                    </div>
+                </div>
+
+                {% if error %}
+                <div class="p-3 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400 text-xs font-medium text-center italic">
+                    <i class="fas fa-exclamation-circle mr-1"></i> {{ error }}
+                </div>
+                {% endif %}
+
+                <button type="submit" class="w-full p-4 rounded-xl bg-indigo-600 text-white font-bold text-sm uppercase tracking-widest hover:bg-indigo-700 transition-all shadow-lg shadow-indigo-500/30 active:scale-[0.98]">
+                    Secure Sign In <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </form>
+
+            <div class="text-center mt-10 pt-8 border-t border-white/5">
+                <a href="#" class="text-indigo-400 text-xs font-semibold hover:text-indigo-300 transition-all">Forgot credentials? Contact Nexus Helpdesk (M28)</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const roleButtons = document.querySelectorAll('.role-btn');
+        const roleInput = document.getElementById('selected-role');
+
+        roleButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                roleButtons.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                roleInput.value = btn.getAttribute('data-role');
+            });
+        });
+
+        const greetingElement = document.getElementById('dynamic-greeting');
+        const greetings = ["Welcome to", "Secure Login", "Unlock Your"];
+        let greetingIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function type() {
+            const currentGreeting = greetings[greetingIndex];
+            if (isDeleting) {
+                greetingElement.textContent = currentGreeting.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                greetingElement.textContent = currentGreeting.substring(0, charIndex + 1);
+                charIndex++;
+            }
+            if (!isDeleting && charIndex === currentGreeting.length) {
+                isDeleting = true;
+                setTimeout(type, 1500);
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                greetingIndex = (greetingIndex + 1) % greetings.length;
+                setTimeout(type, 500);
+            } else {
+                setTimeout(type, isDeleting ? 100 : 150);
+            }
+        }
+        type();
+    </script>
+</body>
+</html>

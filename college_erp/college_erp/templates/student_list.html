@@ -1,0 +1,23 @@
+<div class="container mt-4">
+    <h2>Registered Students 🎓</h2>
+    <table class="table table-striped shadow mt-3">
+        <thead class="table-dark">
+            <tr>
+                <th>Roll No</th>
+                <th>Name</th>
+                <th>Department</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in students %}
+            <tr>
+                <td>{{ s.roll_no }}</td>
+                <td>{{ s.first_name }} {{ s.last_name }}</td>
+                <td>{{ s.department.department_name }}</td>
+                <td>{{ s.email }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>

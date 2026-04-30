@@ -1,0 +1,44 @@
+<div class="dashboard-wrapper">
+    <nav class="sidebar">
+        <h2>EduCore Staff</h2>
+        <ul>
+            <li><a href="#">📅 My Timetable</a></li>
+            <li><a href="{% url 'mark_attendance' %}">✅ Mark Attendance</a></li>
+            <li><a href="#">📚 Academics (Uploads)</a></li>
+            <li><a href="#">💰 Payroll & Slips</a></li>
+            <li><a href="#">🏖️ Leave Management</a></li>
+            <li><a href="#">💬 Communication</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header>
+            <h1>Welcome, {{ staff.user.first_name }}!</h1>
+            <p>Designation: {{ staff.designation }} | ID: {{ staff.staff_id }}</p>
+        </header>
+
+        <div class="stats-container">
+            <div class="card">
+                <h3>Today's Lectures</h3>
+                <p>4 Sessions Assigned</p>
+            </div>
+            <div class="card">
+                <h3>Leave Balance</h3>
+                <p>{{ remaining_leaves }} Days Left</p>
+            </div>
+            <div class="card">
+                <h3>Monthly Salary</h3>
+                <p>Status: Generated</p>
+            </div>
+        </div>
+    </main>
+</div>
+
+<style>
+    /* basic CSS to start */
+    .dashboard-wrapper { display: flex; height: 100vh; }
+    .sidebar { width: 250px; background: #2c3e50; color: white; padding: 20px; }
+    .main-content { flex: 1; padding: 30px; background: #f4f7f6; }
+    .stats-container { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+</style>

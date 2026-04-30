@@ -1,0 +1,18 @@
+<h1>Student Attendance</h1>
+
+<table border="1">
+<tr>
+    <th>Student Name</th>
+</tr>
+
+{% for student in students %}
+<tr>
+    <td>{{ student.name }}</td>
+</tr>
+{% empty %}
+<tr>
+    <td>No Students Found</td>
+</tr>
+{% endfor %}
+
+</table>

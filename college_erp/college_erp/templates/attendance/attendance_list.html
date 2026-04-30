@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Attendance</title>
+</head>
+<body>
+
+<h1>Student Attendance</h1>
+
+<table border="1">
+    <tr>
+        <th>Student Name</th>
+    </tr>
+
+    {% for student in students %}
+<tr>
+    <td>{{ student.student_name }}</td>  </tr>
+{% empty %}
+<tr>
+    <td>Abhi bhi data nahi mila!</td>
+</tr>
+{% endfor %}
+</table>
+
+</body>
+</html>

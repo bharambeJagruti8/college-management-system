@@ -1,0 +1,97 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+<style>
+    :root {
+        --sidebar-bg: #11101d; 
+        --text-bright: #ffffff;
+        --text-muted: #94a3b8;
+        --hover-bg: #4361ee;
+    }
+
+    .sidebar {
+        width: 260px;
+        background: var(--sidebar-bg);
+        height: 100vh;
+        position: fixed;
+        padding: 20px 0;
+        z-index: 1000;
+    }
+
+    .brand {
+        padding: 0 25px 20px;
+        color: white;
+        font-size: 24px;
+        font-weight: 800;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-label {
+        padding: 20px 25px 10px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .nav-link {
+        margin: 5px 15px;
+        padding: 12px 15px;
+        border-radius: 10px;
+        color: #e2e8f0 !important;
+        display: flex;
+        align-items: center;
+        text-decoration: none !important;
+        font-weight: 500;
+        transition: 0.3s;
+    }
+
+    .nav-link i {
+        margin-right: 15px;
+        font-size: 1.2rem;
+        color: #ffffff;
+        opacity: 0.9;
+    }
+
+    .nav-link:hover {
+        background: var(--hover-bg);
+        color: white !important;
+    }
+    
+    .nav-link:hover i {
+        opacity: 1;
+    }
+</style>
+
+<aside class="sidebar">
+    <div class="brand">EduCore</div>
+    
+    <div class="menu-container">
+        <div class="nav-label">Main Hub</div>
+        
+        <a href="/dashboard-module/dashboard/" class="nav-link">
+            <i class="fas fa-th-large"></i> <span>Dashboard</span>
+        </a>
+
+        <div class="nav-label">Management</div>
+        
+        <a href="/dashboard-module/manage-students/" class="nav-link">
+            <i class="fas fa-user-graduate"></i> <span>Students</span>
+        </a>
+
+        <a href="/dashboard-module/staff-manage/" class="nav-link">
+            <i class="fas fa-user-tie"></i> <span>Staff</span>
+        </a>
+
+        <div class="nav-label">Operations</div>
+
+        <a href="/dashboard-module/attendance-center/" class="nav-link">
+            <i class="fas fa-calendar-check"></i> <span>Attendance</span>
+        </a>
+        
+        <a href="/dashboard-module/collect-fee/" class="nav-link">
+            <i class="fas fa-wallet"></i> <span>Fees</span>
+        </a>
+    </div>
+</aside>
