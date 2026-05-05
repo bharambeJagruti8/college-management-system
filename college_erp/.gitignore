@@ -1,0 +1,25 @@
+# Virtual Environment
+my_magic_env/
+venv/
+env/
+
+# Database
+db.sqlite3
+db.sqbpro
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# VS Code
+.vscode/
+
+# Environment variables
+.env
+
+# Media files
+media/
+
+# Static files
+staticfiles/
